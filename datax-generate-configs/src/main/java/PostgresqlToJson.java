@@ -9,20 +9,20 @@ import java.util.Map;
  * Created by atyongsi@163.com on 2020/8/24
  * Description:Have Not Yet
  */
-// read_ip|read_port|read_username|read_password|read_schema|read_table|read_allColumn|splitPk|read_else_conditions
-// write_ip|write_port|write_username|write_password|write_schema|write_table|
+
+
 //ip|port|username|password|schema|table|target_table|splitPk|pk_column|columns|add_column
 public class PostgresqlToJson {
 
     public static Map PostgresqlReaderMap(String[] info, String flag) {
 
-        String ip = info[0];
-        String port = info[1];
-        String username = info[2];
-        String password = info[3];
-        String schema = info[4];
-        String tableName = info[5];
-        String target_table = info[6];
+        String read_ip = info[0];
+        String read_port = info[1];
+        String read_username = info[2];
+        String read_password = info[3];
+        String read_schema = info[4];
+        String read_table = info[5];
+        String read_allColumn = info[6];
         String splitPk = info[7];
         if ("null".equals(splitPk.toLowerCase())) {
             splitPk = null;
@@ -31,7 +31,6 @@ public class PostgresqlToJson {
         if ("null".equals(pkColumn.toLowerCase())) {
             pkColumn = null;
         }
-        String allColumns = info[9];
         String addColumn = null;//增量字段
         if (info.length > 10) {
             addColumn = info[10];
@@ -39,23 +38,22 @@ public class PostgresqlToJson {
 
         //******** reader部分 ********
         StringBuilder sb = new StringBuilder();
-        sb.append("jdbc:postgresql://" + ip + ":" + port + "/");
-        sb.append(schema);
+        sb.append("jdbc:postgresql://" + read_ip + ":" + read_port + "/"+read_schema);
         sb.append("?autoReconnect=true");//开启自动重连，防止连接时间短超时
         Map<String, Object> jdbcUrlTableMap = new HashMap<>();
         List<String> jdbcList = new ArrayList<>();
         jdbcList.add(sb.toString());//考虑到分库的场景,读取的数据源可能有多个
         jdbcUrlTableMap.put("jdbcUrl", jdbcList);//jdbcUrl信息添加到Map,相当于DataX json文件里的jdbcUrl信息
         List<String> tableList = new ArrayList<>();
-        tableList.add(tableName);//考虑到水平分表的场景,可能在一个库里读取多张表
+        tableList.add(read_table);//考虑到水平分表的场景,可能在一个库里读取多张表
         jdbcUrlTableMap.put("table", tableList);//table信息添加到Map,相当于DataX json文件里的table信息
         List<Object> connList = new ArrayList<>();
         connList.add(jdbcUrlTableMap);//相当于DataX json文件里的connection信息
         Map<String, Object> parameterMap = new HashMap<>();
-        parameterMap.put("column", allColumns.split(","));//相当于DataX json文件里的column信息
+        parameterMap.put("column", read_allColumn.split(","));//相当于DataX json文件里的column信息
         parameterMap.put("connection", connList);//把添加connection的信息添加到Map
-        parameterMap.put("username", username);//相当于DataX json文件里的username信息
-        parameterMap.put("password", password);//相当于DataX json文件里的password信息
+        parameterMap.put("username", read_username);//相当于DataX json文件里的username信息
+        parameterMap.put("password", read_password);//相当于DataX json文件里的password信息
         parameterMap.put("where", "1=1");// where条件不配置或者为空，视作全表同步数据。
         if (StringUtils.isNoneEmpty(splitPk)) {
             parameterMap.put("splitPk", splitPk);//相当于DataX json文件里的splitPk信息
@@ -78,7 +76,15 @@ public class PostgresqlToJson {
     }
 
     //******** writer部分 ********
-    public static Map PostgresqlWriterMap() {
+    public static Map PostgresqlWriterMap(String[] writeInfo,String flag) {
+
+        String writeIp = writeInfo[0];
+        String write_port = writeInfo[1];
+        String write_username = writeInfo[2];
+        String write_password = writeInfo[3];
+        String write_schema = writeInfo[4];
+        String write_table = writeInfo[5];
+
 
         Map<String, Object> m2 = new HashMap<>();
         m2.put("jdbcUrl", "jdbc:postgresql://192.168.66.94:5434/dw");//目标jdbc信息
