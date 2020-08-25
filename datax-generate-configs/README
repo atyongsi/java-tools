@@ -1,0 +1,21 @@
+# 需要抽取的数据库/表信息[read_columns读取多个字段需要用","隔开,splitPk_column可以为空或null]
+read_ip|read_port|read_username|read_password|read_schema|read_table|read_columns|add_column|splitPk_column
+数据库ip|端口号|用户名|密码|数据库名|表名|读取的字段|做增量的字段|主键
+# 数据落地的数据库/表信息
+write_ip|write_port|write_username|write_password|write_schema|write_table|write_columns|add_column|pk_column
+数据库ip|端口号|用户名|密码|数据库名|表名|写入的字段|做增量的字段|主键
+
+开发要点:构造一个json格式的字符串时,[ ]里面的内容,使用ArrayList构造,
+{ }里面的内容,使用HashMap<String,Object>构造
+
+
+DataX抽取数据需要配置json文件,如果抽取很多表,那么配置文件就占用很多时间.本项目的作用,就是通过简单配置,批量生成json文件
+这里已经考虑到全量抽取和增量抽取,只需要给定flag[true是增量,false是全量].
+项目适用于所有的RDBMS数据库,因为结构化数据,配置项相似,后面有时间增加其他数据源
+
+
+
+
+
+
+
