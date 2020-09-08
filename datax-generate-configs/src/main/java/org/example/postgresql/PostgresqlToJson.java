@@ -48,16 +48,18 @@ public class PostgresqlToJson {
         parameterMap.put("username", read_username);//相当于DataX json文件里的username信息
         parameterMap.put("password", read_password);//相当于DataX json文件里的password信息
         parameterMap.put("where", "1=1");// where条件不配置或者为空，视作全表同步数据。
-        if (StringUtils.isNoneEmpty(splitPk)) {
-            parameterMap.put("splitPk", splitPk);//相当于DataX json文件里的splitPk信息
-        }
-        if (flag) {// 如果是增量同步数据,需要修改where条件
+        if (flag) {   // 如果是增量同步数据,需要修改where条件
             if (StringUtils.isNoneEmpty(add_column)) {
                 parameterMap.put("where", String.format("%s>=now() - interval '2 day'", add_column));
             } else {
                 throw new IllegalArgumentException("增量抽取数据,需要添加增量字段!");
             }
         }
+
+        if (StringUtils.isNoneEmpty(splitPk)) {
+            parameterMap.put("splitPk", splitPk);//相当于DataX json文件里的splitPk信息
+        }
+
         Map<String, Object> readerMap = new HashMap<>();
         readerMap.put("name", "postgresqlreader");//相当于DataX json文件里的name信息
         readerMap.put("parameter", parameterMap);//相当于DataX json文件里的parameter信息
