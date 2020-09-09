@@ -38,7 +38,7 @@ FROM
 WHERE
 	uc.constraint_name = ucc.constraint_name 
 	AND uc.constraint_type = 'P' AND
-	utc.TABLE_NAME IN ( 'thispendsettle','thisspecstock','thisbusinesssummary','tfullstockinfo' )	
+	ucc.TABLE_NAME IN ( 'thispendsettle','thisspecstock','thisbusinesssummary','tfullstockinfo' )
 GROUP BY
 	ucc.table_name 
 	) pktab ON pktab.table_name = utc.table_name 
