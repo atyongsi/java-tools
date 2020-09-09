@@ -1,10 +1,3 @@
--- DataX做为数据同步的工具，在抽取数据时通过配置json文件来定义作业，如果抽取的表很多，配置json文件是个体力活。我们通过java程序来自动生成json文件
-
---倒推思路：1、java程序读取excel文件，生成json文件 2、定义excel文件的内容，即配置json文件时所需要的信息 3、从数据库中获取表的元数据信息(通过sql获取)
-
--- excel文件格式如下：
--- 上游数据库ip 端口号 用户名 密码 上游数据库名 上游表名 输入的列 主键 主键的数据类型 表数据量 是否增量(增量为true/false) 增量字段 下游数据库ip 端口号 用户名 密码 下游数据库名 下游表名 输出的列
--- read_ip read_port read_username read_password read_db read_table	read_columns pk_columns pk_data_type num_rows incr_whether incr_column write_ip write_port write_username write_password write_db write_table write_columns
 
 -- 表的元数据信息
 SELECT
